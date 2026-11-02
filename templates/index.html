@@ -1,5 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container">
+    <h1>Мои расходы</h1>
 
+    <ul class="expenses">
+        {% for expens in expenses %}
+        <li>
+            <span class="expense-title">
+                {{ expens.title }}
+                {% if expens.expens_date %}
+                <span class="expense-date">{{ expens.expens_date.split()[0] }}</span>
+                {% endif %}
+            </span>
+            <span class="expense-amount">{{ expens.expens_count }} ₽</span>
+            {% if expens.category %}
+            <span class="expense-category">{{ expens.category }}</span>
+            {% endif %}
+            <form class="delete-form" method="post"
+                  action="{{ url_for('delete', expens_id=expens.id) }}">
+                <button type="submit" class="btn-del">Удалить</button>
+            </form>
+        </li>
+        {% else %}
+        <li class="empty">Пока нет расходов. Добавьте первый ниже.</li>
+        {% endfor %}
+    </ul>
+
+    <form class="expense-form" method="post" action="/">
+        <input name="title" placeholder="Новый расход" required>
+        <input name="category" placeholder="Категория">
+        <input name="expens_date" type="date">
+        <input name="expens_count" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Сумма расходов">
+        <button type="submit">Добавить</button>
+    </form>
+</div>
 {% endblock %}

@@ -1,0 +1,254 @@
+/* Светлая версия «посвежее»: живой, но не кислотный зелёный */
+:root {
+  --bg: #fbfdfc;
+  --surface: #f1f6f3;
+  --ink: #16201b;
+  --ink-soft: #66756d;
+  --line: rgba(22, 32, 27, 0.09);
+  --accent: #2fc272;
+  --accent-hover: #26ad63;
+  --accent-active: #1f9654;
+  --accent-text: #0f7a43;
+  --accent-pale: #d6f3e3;
+  --accent-ring: rgba(47, 194, 114, 0.35);
+  --on-accent: #06251a;
+  --danger: #d03a56;
+  --danger-pale: rgba(208, 58, 86, 0.1);
+  --danger-line: rgba(208, 58, 86, 0.42);
+  --radius: 12px;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Helvetica Neue", Helvetica, Arial, "Segoe UI", system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  background-color: var(--bg);
+  /* Заметная свежая «шапка» с мягким переходом в фон */
+  background-image:
+    radial-gradient(ellipse 60% 40% at 85% 0%, rgba(120, 220, 190, 0.45) 0, transparent 70%),
+    linear-gradient(180deg, #b5ebcc 0%, #d9f5e5 210px, var(--bg) 440px);
+  background-repeat: no-repeat;
+}
+
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+}
+
+h1 {
+  margin: 0 0 1.75rem;
+  padding: 0.05em 0 0.1em;
+  font-size: clamp(2.2rem, 8vw, 3.3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Список ---------- */
+.expenses {
+  counter-reset: row;
+  list-style: none;
+  margin: 0 0 1.75rem;
+  padding: 0.5rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 28px rgba(15, 90, 55, 0.1);
+}
+
+.expenses li {
+  counter-increment: row;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.expenses li:hover { background: #eaf8f0; }
+
+/* Порядковый номер строки */
+.expenses li::before {
+  content: counter(row);
+  flex-shrink: 0;
+  width: 1.5rem;
+  text-align: right;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.15s;
+}
+
+.expenses li:hover::before { color: var(--accent-text); }
+
+.expense-title {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.expense-date {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--ink-soft);
+}
+
+.expense-amount {
+  flex-shrink: 0;
+  min-width: 5.5rem;
+  text-align: right;
+  font-weight: 700;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Категория — яркий, но чистый зелёный чип */
+.expense-category {
+  flex-shrink: 0;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  background: var(--accent-pale);
+  box-shadow: inset 0 0 0 1px rgba(15, 122, 67, 0.3);
+  color: var(--accent-text);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.delete-form { margin: 0; flex-shrink: 0; }
+
+.btn-del {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid #c3cdc7;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.btn-del:hover {
+  transform: scale(1.03);
+  background: var(--danger-pale);
+  border-color: var(--danger-line);
+  color: var(--danger);
+}
+
+.btn-del:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+
+.expenses li.empty {
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  color: var(--ink-soft);
+}
+
+.expenses li.empty::before { display: none; }
+
+/* ---------- Форма ---------- */
+.expense-form {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.expense-form input {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 1rem;
+  border: 0;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #d3dbd6;
+  color: var(--ink);
+  font: inherit;
+  line-height: 1.4;
+  transition: box-shadow 0.15s;
+}
+
+.expense-form input::placeholder { color: #8b9a92; }
+
+.expense-form input:hover { box-shadow: inset 0 0 0 1px #9fb0a6; }
+
+.expense-form input:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 1.5px var(--accent-text), 0 0 0 4px var(--accent-ring);
+}
+
+/* Главная кнопка — живая зелёная таблетка */
+.expense-form button {
+  padding: 0.9rem 1.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 8px 20px rgba(47, 194, 114, 0.35);
+  color: var(--on-accent);
+  font: inherit;
+  font-weight: 800;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+
+.expense-form button:hover {
+  background: var(--accent-hover);
+  transform: scale(1.02);
+}
+
+.expense-form button:active {
+  background: var(--accent-active);
+  transform: scale(0.99);
+  box-shadow: 0 3px 8px rgba(47, 194, 114, 0.35);
+}
+
+.expense-form button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+@media (min-width: 560px) {
+  .expense-form { grid-template-columns: 1fr 1fr; }
+  .expense-form input[name="title"],
+  .expense-form input[name="expens_count"],
+  .expense-form button { grid-column: 1 / -1; }
+}
+
+/* Узкие экраны: номер и название в первой строке, остальное ниже */
+@media (max-width: 559px) {
+  .expenses li { flex-wrap: wrap; }
+  .expense-title { flex: 1 1 calc(100% - 1.5rem - 1rem); }
+  .expense-amount { min-width: 0; text-align: left; margin-left: calc(1.5rem + 1rem); }
+  .delete-form { margin-left: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
