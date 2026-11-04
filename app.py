@@ -90,7 +90,14 @@ def index():
     if request.method == "POST":
         title = request.form.get("title", "").strip()
         category = request.form.get("category", "").strip()
-        expens_date = datetime.strptime(request.form["expens_date"], "%Y-%m-%d")
+        raw_date = request.form["expens_date"]
+
+        #потом сделать по другому надо, это пока чисто заглушка
+        if raw_date == "": 
+            expens_date = datetime.now() 
+        else:
+            expens_date = datetime.strptime(raw_date, "%Y-%m-%d")
+            
         expens_count = round(float(request.form["expens_count"]), 2)
         #print(expens_count)
 
