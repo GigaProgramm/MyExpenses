@@ -7,6 +7,24 @@
         href="{{ url_for('static', filename='style.css')}}">
 </head>
 <body>
+    {% if current_user.is_authenticated %}
+    <header class="topbar-wrap">
+        <div class="topbar">
+            <form class="logout-form" method="post" action="{{ url_for('logout') }}">
+                <button type="submit" class="btn-logout">Выйти</button>
+            </form>
+            <p class="topbar-user">Вы вошли как <strong>{{ current_user.username }}</strong></p>
+        </div>
+        <nav class="nav" aria-label="Разделы">
+            <a href="{{ url_for('profile') }}"
+               {% if request.endpoint == 'profile' %}aria-current="page"{% endif %}>Личный кабинет</a>
+            <a href="{{ url_for('index') }}"
+               {% if request.endpoint == 'index' %}aria-current="page"{% endif %}>Мои расходы</a>
+            <a href="{{ url_for('statistic') }}"
+               {% if request.endpoint == 'statistic' %}aria-current="page"{% endif %}>Статистика</a>
+        </nav>
+    </header>
+    {% endif %}
     {% block content %}{% endblock %}
 </body>
 </html>

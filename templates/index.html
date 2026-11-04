@@ -2,13 +2,6 @@
 
 {% block content %}
 <div class="container">
-    <div class="topbar">
-        <p class="topbar-user">Вы вошли как <strong>{{ current_user.username }}</strong></p>
-        <form class="logout-form" method="post" action="{{ url_for('logout') }}">
-            <button type="submit" class="btn-logout">Выйти</button>
-        </form>
-    </div>
-
     <h1>Мои расходы</h1>
 
     <ul class="expenses">
@@ -34,7 +27,7 @@
         {% endfor %}
     </ul>
 
-    <form class="expense-form" method="post" action="/">
+    <form class="expense-form" method="post" action="{{ url_for('index') }}">
         <input name="title" placeholder="Новый расход" required>
         <input name="category" placeholder="Категория">
         <input name="expens_date" type="date">
