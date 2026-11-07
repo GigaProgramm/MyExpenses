@@ -97,7 +97,6 @@ def logout():
     return redirect(url_for("login"))
 
 
-# ---------- Расходы ----------
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
@@ -151,10 +150,29 @@ def edit(expens_id):
     if expens.user_id != current_user.id:
         abort(403)
     if request.method == "POST":
-        expens.title = request.form["title"]
+        title = request.form.get("title", "").strip()
+        category = request.form.get("category", "").strip()
+        raw_date = request.form.get("expens_date", "")
+        raw_count = request.form.get("expens_count", "").replace(",", ".")
+
+        if raw_date == "":
+            expens_date = datetime.now()
+        else:
+            expens_date = datetime.strptime(raw_date, "%Y-%m-%d")
+
+        try:
+            expens_count = round(float(raw_count), 2)
+        except ValueError:
+            expens_count = None
+
+        expens.expens_count=expens_count
+        expens.expens_date=expens_date
+        expens.title=title
+        expens.category=category
+        
         db.session.commit()
         return redirect(url_for("index"))
-    return render_template("edit.html", task=expens)
+    return render_template("edit.html", expens=expens)
 
 
 #тут пока так, надо будет реализовывать логику, пока заглушки

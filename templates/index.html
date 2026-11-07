@@ -21,6 +21,7 @@
                   action="{{ url_for('delete', expens_id=expens.id) }}">
                 <button type="submit" class="btn-del">Удалить</button>
             </form>
+            <a class="btn-edit" href="{{ url_for('edit', expens_id=expens.id) }}">Редактировать</a>   
         </li>
         {% else %}
         <li class="empty">Пока нет расходов. Добавьте первый ниже.</li>
@@ -32,7 +33,7 @@
         <input name="category" placeholder="Категория">
         <input name="expens_date" type="date">
         <input name="expens_count" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Сумма расходов">
-        <button type="submit">Добавить</button>
+        <button type="submit">Изменитьы</button>
     </form>
 </div>
 {% endblock %}
