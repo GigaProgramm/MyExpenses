@@ -185,8 +185,14 @@ def profile():
 @app.route("/statistic")
 @login_required
 def statistic():
-    return render_template("statistic.html")
-
+    query = db.select(Expens).filter_by(user_id=current_user.id)
+    expenses = db.session.scalars(query).all()
+    categorys = {}
+    for expens in expenses:
+        categorys[expens.category]=0
+    for expens in expenses:
+        categorys[expens.category]+=expens.expens_count
+    return render_template("statistic.html",categorys=categorys)
 
 if __name__ == "__main__":
     app.run(debug=True)
