@@ -7,7 +7,7 @@
             {% for category in categorys %}
             <li>
                 <span class="expense-title">
-                    {{ category }}
+                    {% if category=="" %}Без категории{% else %}{{ category }}{% endif %}
                 </span>
                 <span class="expense-amount">{{ categorys[category] }} ₽</span>
             {% else %}
