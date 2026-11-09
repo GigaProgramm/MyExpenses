@@ -220,6 +220,18 @@ def delete_category():
         db.session.commit()
     return redirect(url_for("profile"))
 
+@app.route("/add_category", methods=["POST"])
+@login_required
+def add_category():
+    new_category = request.form.get("new_category", "").strip()
+    if new_category:
+        if current_user.user_category is None:
+            current_user.user_category = []
+        if new_category not in current_user.user_category:
+            current_user.user_category.append(new_category)
+            db.session.commit()
+    return redirect(url_for("profile"))
+
 @app.route("/statistic")
 @login_required
 def statistic():

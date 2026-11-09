@@ -19,5 +19,9 @@
   {% else %}
   <p class="category-empty">Пока нет своих категорий</p>
   {% endif %}
+  <form class="expense-form category-add" method="post" action="{{ url_for('add_category') }}">
+    <input name="new_category" placeholder="Новая категория" required>
+    <button type="submit">Добавить</button>
+  </form>
 </div>
 {% endblock %}
