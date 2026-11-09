@@ -7,6 +7,7 @@ from flask_login import (LoginManager, UserMixin, current_user, login_required,
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy.ext.mutable import MutableList
 
 DATA_DIR = Path(__file__).parent / "data"
 DATA_DIR.mkdir(exist_ok=True)
@@ -22,11 +23,17 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 
+common_category = ("Продукты", "Кафе", "Рестораны", 
+                 "Фастфуд", "Транспорт", "Автомобиль", "ЖКХ", 
+                 "Связь и интернет", "Аптеки и здоровье", "Красота и уход", 
+                 "Одежда и обувь", "Развлечения и досуг", "Путешествия и отели", 
+                 "Дом и ремонт", "Образование", "Переводы и наличные", "Разное")
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
     password_hash = db.Column(db.String(200))
+    user_category = db.Column(MutableList.as_mutable(db.JSON))
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -61,7 +68,7 @@ def register():
             return render_template("register.html",
                                    error="Введите логин и пароль")
 
-        user = User(username=username)
+        user = User(username=username,user_category=[])
         user.set_password(password)
         try:
             db.session.add(user)
@@ -100,11 +107,16 @@ def logout():
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
+    user_category = current_user.user_category
+    all_category = category_list_building(user_category)
     if request.method == "POST":
         title = request.form.get("title", "").strip()
         category = request.form.get("category", "").strip()
         raw_date = request.form.get("expens_date", "")
         raw_count = request.form.get("expens_count", "").replace(",", ".")
+        if not category in all_category:
+            current_user.user_category.append(category)  
+            db.session.commit()
 
         if raw_date == "":
             expens_date = datetime.now()
@@ -125,11 +137,10 @@ def index():
             db.session.commit()
 
         return redirect(url_for("index"))
-
     query = db.select(Expens).filter_by(user_id=current_user.id)
     expenses = db.session.scalars(query).all()
 
-    return render_template("index.html", expenses=expenses)
+    return render_template("index.html", expenses=expenses, all_category=all_category)
 
 
 @app.route("/delete/<int:expens_id>", methods=["POST"])
@@ -146,6 +157,8 @@ def delete(expens_id):
 @app.route("/edit/<int:expens_id>", methods=["GET", "POST"])
 @login_required
 def edit(expens_id):
+    user_category = current_user.user_category
+    all_category = category_list_building(user_category)
     expens = db.get_or_404(Expens, expens_id)
     if expens.user_id != current_user.id:
         abort(403)
@@ -154,6 +167,10 @@ def edit(expens_id):
         category = request.form.get("category", "").strip()
         raw_date = request.form.get("expens_date", "")
         raw_count = request.form.get("expens_count", "").replace(",", ".")
+
+        if not category in all_category:
+            current_user.user_category.append(category)  
+            db.session.commit()
 
         if raw_date == "":
             expens_date = datetime.now()
@@ -172,8 +189,18 @@ def edit(expens_id):
         
         db.session.commit()
         return redirect(url_for("index"))
-    return render_template("edit.html", expens=expens)
+    return render_template("edit.html", expens=expens, all_category=all_category)
 
+def category_list_building(user_category):
+    global common_category
+    all_category = []
+    for i in common_category:
+        all_category.append(i)
+    if user_category:
+        for i in user_category:
+            all_category.append(i)
+
+    return all_category
 
 #тут пока так, надо будет реализовывать логику, пока заглушки
 @app.route("/profile")

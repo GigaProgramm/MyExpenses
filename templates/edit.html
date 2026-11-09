@@ -13,7 +13,12 @@
         <form class="expense-form" method="post"
             action="{{ url_for('edit', expens_id=expens.id) }}">
             <input name="title" value="{{ expens.title }}" required>
-            <input name="category" value="{{ expens.category or '' }}">
+            <select name="category">
+                <option value="">Без категории</option>
+                {% for category in all_category %}
+                    <option value="{{ category }}" {% if category == expens.category %}selected{% endif %}>{{ category }}</option>
+                {% endfor %}
+            </select>
             <input name="expens_date" type="date" value="{{ expens.expens_date.split()[0] if expens.expens_date else '' }}">
             <input name="expens_count" type="number" min="0" step="0.01"
                 inputmode="decimal" value="{{ expens.expens_count }}">
@@ -22,4 +27,3 @@
 </div>
 
 {% endblock %}
-
