@@ -202,12 +202,23 @@ def category_list_building(user_category):
 
     return all_category
 
-#тут пока так, надо будет реализовывать логику, пока заглушки
+
 @app.route("/profile")
 @login_required
 def profile():
-    return render_template("profile.html")
+    user_category = current_user.user_category
 
+    return render_template("profile.html", user_category=user_category)
+
+@app.route("/delete_category", methods=["POST"])
+@login_required
+def delete_category():
+    name = request.form.get("category", "")
+    categories = current_user.user_category
+    if categories and name in categories:
+        categories.remove(name)
+        db.session.commit()
+    return redirect(url_for("profile"))
 
 @app.route("/statistic")
 @login_required

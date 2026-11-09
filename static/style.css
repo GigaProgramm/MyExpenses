@@ -542,3 +542,53 @@ h1 {
   margin: 0.4rem 0 0;
   color: var(--ink-soft);
 }
+/* ================================================
+   Личный кабинет
+   ================================================ */
+
+.section-title {
+  margin: 0 0 1rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+/* Категории — стопка белых карточек */
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.category-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  padding: 0.9rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 18px rgba(15, 90, 55, 0.08);
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  transition: transform 0.1s, background 0.15s, color 0.15s;
+}
+
+.category-list li:hover {
+  transform: translateX(3px);
+  background: #eaf8f0;
+  color: var(--accent-text);
+}
+
+.category-empty {
+  margin: 0;
+  color: var(--ink-soft);
+}

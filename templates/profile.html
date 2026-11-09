@@ -2,10 +2,22 @@
 
 {% block content %}
 <div class="container">
-    <h1>Личный кабинет</h1>
-    <div class="placeholder">
-        <p class="placeholder-title">Здесь что-то будет</p>
-        <p class="placeholder-text">Раздел в разработке. Скоро тут появятся данные профиля.</p>
-    </div>
+  <h1>Личный кабинет</h1>
+  <h2 class="section-title">Пользовательские категории</h2>
+  {% if user_category %}
+  <ul class="category-list">
+    {% for category in user_category %}
+    <li>
+      <span>{{ category }}</span>
+      <form class="delete-form" method="post" action="{{ url_for('delete_category') }}">
+        <input type="hidden" name="category" value="{{ category }}">
+        <button type="submit" class="btn-del">Удалить</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="category-empty">Пока нет своих категорий</p>
+  {% endif %}
 </div>
 {% endblock %}
